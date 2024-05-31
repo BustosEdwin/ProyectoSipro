@@ -1,0 +1,42 @@
+﻿/*body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}*/
+
+/* Set padding to keep content from hitting the edges */
+/*.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}*/
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+/*.dl-horizontal dt {
+    white-space: normal;
+}*/
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/
+
+.skin-green .main-header .navbar {
+    background-image: url(../img/circuit_trans.png); 
+    background-color: #38763A!important;
+}
+.skin-green .main-header .logo {
+    background-image: url(../img/circuit_trans.png); 
+    background-color: #38763A!important;
+}
+
+.skin-green .sidebar-menu>li.active>a {
+    border-left-color: #a3ab0c;
+}
+
+.navbar-brand > img {
+    margin-top: -12px;
+    height: 42px;
+}

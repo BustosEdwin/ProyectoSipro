@@ -1,0 +1,210 @@
+﻿@model IEnumerable<Comun.Sipro.Dto.SiproProyectoDto>
+
+@{
+    ViewBag.Title = "BandejaProyectos";
+}
+
+<!-- Inicio scripts pagina -->
+@section scripts{
+
+    <script>
+        poblarTabla("myTable");
+    </script>
+    <script src="~/assets/personalizado/js/Proyecto.js"></script>
+}
+
+<div class="row page-titles">
+    <div class="col-md-5 col-8 align-self-center">
+        <h3 class="text-themecolor m-b-0 m-t-0">SIPRO</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "" })">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="#">Proyectos</a></li>
+        </ol>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Lista Proyectos</h4>
+        @if (User.IsInRole("ADMINISTRADORJEFE") || User.IsInRole("ADMINISTRADORUNIDAD"))
+        {
+            <button class="btn btn-success float-right" id="btnAgregarProyecto">Agregar proyecto</button>
+        }
+
+        <table id="myTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Gestión Proyecto")
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Acronimo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FechaInicio)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdEstado)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SiglaUnidadResponsable)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FuncionarioCreacion)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Identificacion)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="mdi mdi-file-document-box"></span></button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#" name="btnDetalleProyecto"><input type="hidden" value="@item.IdProyecto" />Ver Descripción</a>
+                                    <a class="dropdown-item" href="@Url.Action("BandejaActividadesProyecto", "Actividad", new { _idProyecto = item.IdProyecto})">Ver Proyecto</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Acronimo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaInicio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DescripcionEstado)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SiglaUnidadResponsable)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FuncionarioCreacion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Identificacion)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--Modal para Mostrar Descripción del proyecto-->
+<div class="modal bd-example-modal-xl" id="modalDetalleProyecto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Descripción u Observación</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="pDetalleProyecto"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Termina Modal Mostrar Descripción del proyecto-->
+<!--Modal Asignar Responsable Actividad-->
+
+<div class="modal bd-example-modal-xl" id="modalAgregarProyecto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Crear Proyecto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h2> Ingresar Información Proyecto</h2>
+                            </div>
+                            <div class="form-horizontal">
+                                <div class="form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-12">Nombre</label>
+                                            <input class="form-control" id="Nombre"/>
+                                           
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-12">Descripcion</label>
+                                            <input class="form-control" id="Descripcion"/>
+                                         
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-12">Acronimo</label>
+                                            <input class="form-control" id="Acronimo"/>
+
+                                            @*@Html.LabelFor(model => model.Acronimo, htmlAttributes: new { @class = "control-label col-md-12" })
+                                            @Html.EditorFor(model => model.Acronimo, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.Acronimo, "", new { @class = "text-danger" })*@
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="recipient-name" class="col-form-label">Unidad Responsable de Administración Técnica</label>
+                                            @Html.DropDownList("Unidades", null, "Seleccione una opción", htmlAttributes: new { @class = "form-control select2", style = "width: 100%;", required = "required", id = "UnidadesResponsable" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="recipient-name" class="col-form-label">Unidad Solicitante</label>
+                                            @Html.DropDownList("Unidades", null, "Seleccione una opción", htmlAttributes: new { @class = "form-control select2", style = "width: 100%;", required = "required", id = "UnidadesSolicitante" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    @*<div class="row">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" value="Crear Proyecto" id="btnCrearProyecto" class="btn btn-success" />
+                                        </div>
+                                    </div>*@
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" @*data-dismiss="modal"*@ id="btnCrearProyecto">
+                    Crear Proyecto
+                </button>
+                @*<input type="hidden" id="valorIdBitacora" />*@
+
+            </div>
+        </div>
+    </div>
+</div>

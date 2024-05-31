@@ -1,0 +1,340 @@
+﻿@model IEnumerable<Comun.Sipro.Dto.SiproEvidenciaDto>
+
+@{
+    ViewBag.Title = "EvidenciaEnviada";
+}
+
+<!-- Inicio scripts pagina -->
+@section scripts{
+    <script src="~/assets/personalizado/js/Evidencia.js"></script>
+
+    <script>
+        $(function () {
+            poblarTabla("myTable3");
+           //poblarTabla("myTable1");
+        })
+    </script>
+
+    <script>
+        var listaEvidencia = []; 
+    </script>
+}
+
+<div class="row page-titles">
+    <div class="col-md-5 col-8 align-self-center">
+        <h3 class="text-themecolor m-b-0 m-t-0">SIPRO</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "" })">Inicio</a></li>
+            @*<li class="breadcrumb-item"><a href="@Url.Action("BandejaProyectos", "Proyecto", new { area = "" })">Proyectos</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("BandejaActividadesProyecto", "Actividad", new { _idProyecto = ViewBag.IdProyecto })">Detalle Proyecto</a></li>*@
+            <li class="breadcrumb-item"><a href="#">Bandeja LLegada</a></li>
+        </ol>
+    </div>
+</div>
+
+<input type="hidden" id="IdActividad" value="@ViewBag.IdActividad" />
+
+
+<div class="card-header">
+
+    <div class="card card-outline-info">
+        <div class="modal-header card-header">
+            <h5 class="modal-title m-b-0 text-white">Bandeja Documentos llegados </h5>
+            @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>*@
+        </div>
+        @*<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" name="btnSubirEnvidencia">Bandeja Documentos llegados</button><br />*@
+        <div class="table-responsive m-t-40">
+            <table id="myTable3" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Nombre Proyecto
+                        </th>
+                        <th>
+                            Sigla Proyecto
+                        </th>
+                        <th>
+                            Fase Proyecto
+                        </th>
+                        <th>
+                            Descripción Comentario
+                        </th>
+                        <th>
+                            Nombre Archivo
+                        </th>
+                        <th>
+                            Usuario Envia
+                        </th>
+                        <th>
+                            Fecha Envío
+                        </th>
+
+                        <th></th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre_proyecto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.sigla_proyecto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fase_proyecto)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.descripcion_documento)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NombreArchivo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UsuarioCreacion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaCreacion)
+                        </td>
+
+                        @*<td>
+            @Html.DisplayFor(modelItem => item.IdEvidencia)
+        </td>*@
+                        <td class="text-center">
+
+                            <div class="dropdown">
+                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Presioname
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <input type="hidden" id="IdEvidencia" value="@item.IdEvidencia" />
+                                    <a class="dropdown-item" href="#" name="mostrarPdf">Ver documento</a>
+                                    <a class="dropdown-item" href="#" onclick="ModalEnviar('@item.IdEvidencia')">Enviar</a>
+                                    <a class="dropdown-item" href="#" onclick="ConsultaTrazabilidad('@item.IdEvidencia')">Trazabilidad</a>
+                                    @*<a class="dropdown-item" href="#" onclick="location.href='@Url.Action("BandejaEvidencias", "Comentariost", new { _idEvidencia = @item.IdEvidencia})'">Trazabilidad</a>*@
+                                </div>
+                            </div>
+                            <div class="modal" id="@item.IdEvidencia" tabindex="-1" role="dialog" aria-labelledby="addContainerLabel">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="cerrar"><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="text-center">
+                                                <object id='pdfbox' type="application/pdf" data="@Url.Action("VerArchivoPdf", "Evidencia", @*Model*@ new { _nombreArchivo = item.NombreArchivo})">
+                                                    @Html.ActionLink("Visualizar Archivo Pdf", "VerArchivoPdf", "Evidencia", new { id = item.IdEvidencia }, new { @class = "btn btn-warning btn-block btn-flat" })
+                                                </object>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Modal para Agregar el comentario a la evidencia-->
+
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!--Termina Modal para Agregar el Comentario a la Actividad-->
+<!--Modal Asignar comentario Actividad-->
+<div class="modal fade" id="modalComentarioEvidencia" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content card card-outline-info">
+            <div class="modal-header card-header">
+                <h5 class="modal-title m-b-0 text-white" id="exampleModalCenterTitle">Enviar documento unidad origen </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Funcionario a Enviar:</label>
+                        @*@Html.DropDownList("ResponsablesProyectos", null, htmlAttributes: new { @class = "form-control", style = "width: 100%;", required = "required", id = "IdResponsable" })*@
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Estado:</label>
+                        @Html.DropDownList("Estado", null, htmlAttributes: new { @class = "form-control", style = "width: 100%;", required = "required", id = "IdEstado" })
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <p id="pDetalleProyecto"></p>
+                        <label for="recipient-name" class="col-form-label">Comentario:</label>
+                        <textarea class="form-control" id="ComentarioEvidencia"></textarea>
+                    </div>
+                </div>
+            </div>
+                <div class="form-actions">
+                    <div class="model-footer text-center">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close"></i>Cerrar</button>
+
+                        <button type="button" class="btn btn-info" id="btnEnviarResponsableActividad" onclick=""><i class="fa fa-download"></i> Enviar</button>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-xl" id="modalAsignarResponsable" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Responsable</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Responsables:</label>
+                        @Html.DropDownList("ResponsablesProyecto", null, htmlAttributes: new { @class = "form-control", style = "width: 100%;", required = "required", id = "IdResponsable2" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" >Cerrar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnGuardarResponsableActividad">
+                        Guardar
+                    </button>
+                    <input type="hidden" id="valorIdBitacora" />
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-xl" id="modaltrazabilidad" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content  card card-outline-info">
+                <div class="modal-header card-header">
+                    <h5 class="modal-title m-b-0 text-white" id="exampleModalCenterTitle">Trazabilidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="table-responsive m-t-40">
+                            <table id="miTabla" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Nombre
+                                        </th>
+                                        <th>
+                                            Unidad Actual
+                                        </th>
+                                        <th>
+                                            Comentario
+                                        </th>
+                                        <th>
+                                            Estado
+                                        </th>                        
+                                      
+                                    </tr>
+
+                                </thead>
+                                <tbody id="tbodyEvidencia"></tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close"></i>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Termina Modal Asignar Responsable Actividad-->
+                        <!--Modal Subir Evidencia-->
+                        <div class="modal fade bd-example-modal-xl" id="modalSubirEvidencia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-xl" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle">Subir Evidencia</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label">Archivo:</label>
+                                            <input type="file" accept=".pdf" required class="form-control" name="ArchivoPdf">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label">Observación:</label>
+                                            <textarea class="form-control" id="Observacion"></textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="recipient-name" class="col-form-label">Usuario:</label>
+                                                    <input type="text" class="form-control" id="Usuario">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="recipient-name" class="col-form-label">Contraseña:</label>
+                                                    <input type="password" class="form-control" id="Contrasena">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnGudarEvidencia">
+                                            Guardar
+                                        </button>
+                                        <input type="hidden" id="valorIdBitacoraEvidencia" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Termina Modal Subir Evidencia Actividad-->
+                        <!--Modal mostrar archivo PDF-->
+                        <style>
+                            #pdfbox {
+                                width: 95%;
+                                height: 800px;
+                                border: 5px solid #ccc;
+                            }
+                        </style>
+
+
+                        <!--Temina modal mostrar archivo PDF-->
+
+                        <script>
+                            window.addEventListener('load', iniciar, false);
+
+                            function iniciar() {
+                                var botonMostrarModalDocumento = document.getElementsByName('mostrarPdf');
+
+                                for (var i = 0; i < botonMostrarModalDocumento.length; i++) {
+                                    botonMostrarModalDocumento[i].addEventListener('click', mostrarModalPdf, false)
+                                }
+                            }
+
+                            function mostrarModalPdf() {
+
+                                var hermanoMenor = this.previousSibling;
+                                $('#' + hermanoMenor.previousSibling.value).modal('show');
+
+                            }
+
+                        </script>
+
+

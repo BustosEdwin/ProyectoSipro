@@ -1,0 +1,172 @@
+﻿@model Datos.Sipro.SiproUsuarioRol
+
+@{
+    ViewBag.Title = "CrearRol";
+}
+<script src="~/assets/plugins/jquery/jquery.min.js"></script>
+<link href="~//assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet">
+<!-- Page plugins css -->
+<link href="~//assets/plugins/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
+<!-- Color picker plugins css -->
+<link href="~//assets/plugins/jquery-asColorPicker-master/dist/css/asColorPicker.css" rel="stylesheet">
+<!-- Date picker plugins css -->
+<link href="~//assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+<!-- Daterange picker plugins css -->
+<link href="~//assets/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+<link href="~//assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+
+@section scripts{
+    <script src="~/assets/personalizado/js/Administracion.js"></script>
+    <script>
+        $(function () {
+            poblarTabla("myTable2");
+            poblarTabla("myTable1");
+        })
+    </script>
+}
+<br />
+<div class="card card-outline-info">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-outline-info">
+                <div class="card-header">
+
+                    <h3 class="title m-b-0 text-white"><i class="fa fa-check-circle"></i> Agregar Usuarios</h3>
+                </div>
+
+
+
+
+                <input id="Consecutivo" name="Consecutivo" Value="" type="hidden" />
+                <input id="UndeConsecutivo" name="UndeConsecutivo" Value="" type="hidden" />
+                <input id="UndeFuerza" name="UndeFuerza" Value="" type="hidden" />
+                <input id="usuario" name="usuario" Value="" type="hidden" />
+                @*<div class="form-actions">
+                        <div class="modal-body">
+                            <div class="model-footer text-center">
+                                <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" name="btnAbrirModal">Agregar Rol</button><br />
+                            </div>
+                        </div>
+                    </div>*@
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="control-label"><strong>Identificación *</strong></label>
+                                <div class="input-group-append">
+                                    <input type="text" class="form-control" id="Identificacion2">
+                                    <button class="btn btn-info" type="button" id="btn_Identificacion"><span class="fa fa-search"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Nombre:</label>
+                                <input type="text" class="form-control" id="IdNombre">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Cargo:</label>
+                                <input type="text" class="form-control" id="IdCargo">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Unidad:</label>
+                                <input type="text" class="form-control" id="IdUnidad">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Vigente:</label>
+                                @Html.DropDownList("IdVigente", null, String.Format("Seleccione una opción"), htmlAttributes: new { @class = "form-control select2", style = "width: 100%;", id = "IdVigente" })
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Rol:</label>
+                                @Html.DropDownList("IdRol", null, String.Format("Seleccione una opción"), htmlAttributes: new { @class = "form-control select2", style = "width: 100%;", id = "IdRol" })
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Fecha Inicio:</label>
+                                <input type="text" class="form-control" id="FechaInicio">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Fecha Fin:</label>
+                                <input type="text" class="form-control" id="FechaFin">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <div class="model-footer text-center">
+                            @*<button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close"></i>Cerrar</button>*@
+
+                            <button type="button" class="btn btn-info" id="btnGudarUsuario" onclick=""><i class="fa fa-download"></i> Guardar</button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="modalRol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content card card-outline-info">
+            <div class="modal-header card-header">
+                <h5 class="modal-title m-b-0 text-white" id="exampleModalCenterTitle">Enviar documento para revisión </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Nombre Rol:</label>
+                        <input type="text" class="form-control" id="DescripcionRol">
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="model-footer text-center">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-close"></i>Cerrar</button>
+
+                    <button type="button" class="btn btn-info" id="btnGudarRol" onclick=""><i class="fa fa-download"></i> Guardar</button>
+                </div>
+            </div>
+            <br />
+        </div>
+    </div>
+</div>
+
+<script src="~/assets/plugins/moment/moment.js"></script>
+<script src="~/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<!-- Clock Plugin JavaScript -->
+<script src="~/assets/plugins/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<!-- Color Picker Plugin JavaScript -->
+<script src="~/assets/plugins/jquery-asColor/dist/jquery-asColor.js"></script>
+<script src="~/assets/plugins/jquery-asGradient/dist/jquery-asGradient.js"></script>
+<script src="~/assets/plugins/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"></script>
+<!-- Date Picker Plugin JavaScript -->
+<script src="~/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="~/assets/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="~/assets/plugins/daterangepicker/daterangepicker.js"></script>
+
+<script>
+    $('#FechaInicio').bootstrapMaterialDatePicker({ weekStart: 0, time: false });
+    $('#FechaFin').bootstrapMaterialDatePicker({ weekStart: 0, time: false });
+
+</script>

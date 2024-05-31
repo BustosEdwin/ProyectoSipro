@@ -1,0 +1,651 @@
+﻿@model IEnumerable<Comun.Sipro.Dto.SiproBitacoraDto>
+
+@{
+    ViewBag.Title = "BandejaActividadesProyecto";
+}
+
+<script src="~/assets/plugins/jquery/jquery.min.js"></script>
+<link href="~//assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet">
+<!-- Page plugins css -->
+<link href="~//assets/plugins/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
+<!-- Color picker plugins css -->
+<link href="~//assets/plugins/jquery-asColorPicker-master/dist/css/asColorPicker.css" rel="stylesheet">
+<!-- Date picker plugins css -->
+<link href="~//assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+<!-- Daterange picker plugins css -->
+<link href="~//assets/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+<link href="~//assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+<!-- Custom CSS -->
+@*<link href="css/style.css" rel="stylesheet">*@
+<!-- You can change the theme colors from here -->
+@*<link href="css/colors/green-dark.css" id="theme" rel="stylesheet">*@
+
+
+<!-- Inicio scripts pagina -->
+@section scripts{
+    <script src="~/assets/personalizado/js/Actividades.js"></script>
+    <script>
+        $(function () {
+            poblarTabla("myTable3");
+            poblarTabla("myTable1");
+            poblarTabla("myTable2");
+            poblarTabla("myTable4");
+        })
+    </script>
+}
+
+<div class="row page-titles">
+    <div class="col-md-5 col-8 align-self-center">
+        <h3 class="text-themecolor m-b-0 m-t-0">SIPRO</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "" })">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("BandejaProyectos", "Proyecto", new { area = "" })">Proyectos</a></li>
+            <li class="breadcrumb-item"><a href="#">Detalle Proyecto</a></li>
+        </ol>
+    </div>
+</div>
+
+<input type="hidden" id="IdProyecto" value="@ViewBag.Proyecto.IdProyecto" />
+
+<div class="alert alert-success">
+    <h3 class="text-success"><i class="fa fa-check-circle"></i> Detalle del proyecto</h3>
+    <p><b>- Acrónimo:</b> @ViewBag.Proyecto.Acronimo</p>
+    <p><b>- Nombre:</b> @ViewBag.Proyecto.Nombre</p>
+    <p><b>- Estado:</b> @ViewBag.Proyecto.DescripcionEstado</p>
+    @if (@ViewBag.Observacion != null)
+    {
+        <p><b>- Descripción:</b> @ViewBag.Observacion</p>
+    }
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Actividades</h4>
+        @{
+            if (ViewBag.TipoResponsabilid.Contains("LIDER PROYECTO") || User.IsInRole("ADMINISTRADORJEFE"))
+            {
+                <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" name="btnModalAgregarActividad">Agregar actividad</button><br />
+            }
+        }
+        <div class="table-responsive m-t-40">
+            <table id="myTable3" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Fase)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Descripcion)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FechaInicio)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FechaFin)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Observacion)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UsuarioCreacion)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        if (item.EvidenciaValida)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Fase)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Descripcion)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FechaInicio)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FechaFin)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Observacion)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UsuarioCreacion)
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-success" type="button" href="@Url.Action("BandejaEvidencias", "Evidencia", new { _idActividad = item.IdBitacora, _idProyecto = ViewBag.Proyecto.IdProyecto })"><i class="mdi mdi-plus-circle"></i></a>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            if ((item.FechaFin.DayOfYear - DateTime.Now.DayOfYear) <= 1)
+                            {
+
+                                <tr style="background-color:#EC370A; color:white;">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fase)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Descripcion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FechaInicio)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FechaFin)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Observacion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UsuarioCreacion)
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-success" type="button" href="@Url.Action("BandejaEvidencias", "Evidencia", new { _idActividad = item.IdBitacora, _idProyecto = ViewBag.Proyecto.IdProyecto })"><i class="mdi mdi-plus-circle"></i></a>
+                                    </td>
+                                </tr>
+
+
+                            }
+                            else if ((item.FechaFin.DayOfYear - DateTime.Now.DayOfYear) >= 2 && (item.FechaFin.DayOfYear - DateTime.Now.DayOfYear) <= 7)
+                            {
+                                <tr style="background-color:#EBE514; color:black;">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fase)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Descripcion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FechaInicio)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FechaFin)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Observacion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UsuarioCreacion)
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-success" type="button" href="@Url.Action("BandejaEvidencias", "Evidencia", new { _idActividad = item.IdBitacora, _idProyecto = ViewBag.Proyecto.IdProyecto })"><i class="mdi mdi-plus-circle"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                            else if ((item.FechaFin.DayOfYear - DateTime.Now.DayOfYear) > 7)
+                            {
+                                <tr style="background-color:green; color:white;">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fase)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Descripcion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FechaInicio)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FechaFin)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Observacion)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UsuarioCreacion)
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-success" type="button" href="@Url.Action("BandejaEvidencias", "Evidencia", new { _idActividad = item.IdBitacora, _idProyecto = ViewBag.Proyecto.IdProyecto })"><i class="mdi mdi-plus-circle"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+
+
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<!--Inicio tabla para los Responsables del proyecto vigentes y activos-->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Equipo de Trabajo</h4>
+        @{
+            if (ViewBag.TipoResponsabilid.Contains("LIDER PROYECTO") || User.IsInRole("ADMINISTRADORJEFE"))
+            {
+                <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" name="btnModalAgregarResponsable">Agregar responsable</button><br />
+            }
+        }
+        <div class="table-responsive m-t-40">
+            <table id="myTable1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Funcionario")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Cargo")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Identificación")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Fecha asignación")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Observaciones")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Activo")
+                        </th>
+
+                        <th>
+                            @Html.DisplayName("Finalizar responsable")
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.ResponsablesProyectoActivos)
+                    {
+                        <tr>
+                            <td>
+                                @item.NombreCompletoGrado
+                            </td>
+                            <td>
+                                @item.TipoResponsabilidad
+                            </td>
+                            <td>
+                                @item.Identificacion
+                            </td>
+                            <td>
+                                @item.FechaAsignacion
+                            </td>
+                            <td>
+                                @item.Observaciones
+                            </td>
+                            <td>
+                                @item.DescripcionActivo
+                            </td>
+
+                            @if (User.IsInRole("ADMINISTRADORJEFE") || User.IsInRole("ADMINISTRADORUNIDAD"))
+                            {
+                                <td class="text-center">
+                                    <button class="btn btn-success" onclick="mostrarModalFinalizarResponsable('@item.IdResponsable')"><i class="mdi mdi-close-box"></i></button>
+                                </td>
+
+                            }
+                            else
+                            {
+                                if (ViewBag.TipoResponsabilid.Contains("LIDER PROYECTO"))
+                                {
+                                    <td class="text-center">
+                                        <button class="btn btn-success" onclick="mostrarModalFinalizarResponsable('@item.IdResponsable')"><i class="mdi mdi-close-box"></i></button>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-center"></td>
+                                }
+                            }
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<!--Finalización de tabla para los Responsables del proyecto vigentes y activos-->
+<!--Inicio tabla para los Responsables del proyecto vigentes y no activos-->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Historial Responsabilidades Equipo de Trabajo</h4>
+        <div class="table-responsive m-t-40">
+            <table id="myTable4" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Funcionario")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Cargo")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Identificación")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Fecha asignación")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Fecha fin")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Observaciones")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Activo")
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.ResponsablesProyectoNoActivos)
+                    {
+                        <tr>
+                            <td>
+                                @item.NombreCompletoGrado
+                            </td>
+                            <td>
+                                @item.Cargo
+                            </td>
+                            <td>
+                                @item.Identificacion
+                            </td>
+                            <td>
+                                @item.FechaAsignacion
+                            </td>
+                            <td>
+                                @item.FechaFin
+                            </td>
+                            <td>
+                                @item.Observaciones
+                            </td>
+                            <td>
+                                @item.DescripcionActivo
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<!--Finalización de tabla para los Responsables del proyecto vigentes y no activos-->
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Recursos</h4>
+        @{
+            if (ViewBag.TipoResponsabilid.Contains("LIDER PROYECTO") || User.IsInRole("ADMINISTRADORJEFE"))
+            {
+                <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" name="btnModalAdicionarRecurso">Agregar recurso</button><br />
+            }
+        }
+        <div class="table-responsive m-t-40">
+            <table id="myTable2" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Nombre")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Tipo Recurso")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Dirección IP")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Base Datos")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Adicionales")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Fecha Creacion")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Usuario Creacion")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Recursos)
+                    {
+                        <tr>
+                            <td>
+                                @item.Nombre
+                            </td>
+                            <td>
+                                @item.TipoRecurso
+                            </td>
+                            <td>
+                                @item.DireccionIp
+                            </td>
+                            <td>
+                                @item.BaseDatos
+                            </td>
+                            <td>
+                                @item.Adicionales
+                            </td>
+                            <td>
+                                @item.FechaCreacion
+                            </td>
+                            <td>
+                                @item.UsuarioCreacion
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<!--Modal para agregar los recursos-->
+
+<div class="modal bd-example-modal-xl" id="modalAdicionarRecurso" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Recursos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Nombre:</label>
+                    <input type="text" class="form-control" id="Nombre">
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Tipo Recurso:</label>
+                    @*<select class="selectpicker" data-live-search="true">
+                            @foreach (var item in ViewBag.TipoRecursos)
+                            {
+                                <option data-tokens="ketchup mustard">@item.Text</option>
+                            }
+                        </select>*@
+                    @Html.DropDownList("TipoRecursos", null, "Selecciones una opción", htmlAttributes: new { @class = "selectpicker select2", style = "width: 100%;", required = "required", id = "tipoRecursos" })
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Dirección Ip:</label>
+                    <input type="text" class="form-control" id="DireccionIp">
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Base de Datos:</label>
+                    <input type="text" class="form-control" id="BaseDatos">
+                </div>
+                <div class="form-group">
+
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Descripción u Observación:</label>
+                        <textarea class="form-control" id="Descripcion"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="btnGuardarRecurso">Guardar</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Termina Modal para agregar los recursos-->
+<!--Modal Agregar Responsable del proyecto-->
+<div class="modal bd-example-modal-xl" id="modalAgregarResponsable" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Responsable</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Identificación:</label>
+                    <input type="number" class="form-control" id="Identificacion">
+                    <div id="datosFuncionario">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Tipo Recurso:</label>
+                    @Html.DropDownList("TipoResponsabilidad", null, "Seleccione una opción", htmlAttributes: new { @class = "form-control select2", style = "width: 100%;", required = "required", id = "tipoResonsabilidad" })
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarResponsable">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Agregar Actividad del proyecto-->
+<div class="modal bd-example-modal-xl" id="modalAgregarActividad" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Actividad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Fase:</label>
+                    @Html.DropDownList("Fases", null, "Seleccione una opción", htmlAttributes: new { @class = "form-control select2", style = "width: 100%;", required = "required", id = "IdFase" })
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Fecha Inicio:</label>
+                            <input type="text" class="form-control" id="FechaInicio" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Fecha Fin:</label>
+                            <input type="text" class="form-control" id="FechaFin" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Descripción:</label>
+                            <textarea class="form-control" id="DescripcionActividad"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Observación:</label>
+                            <textarea class="form-control" id="ObservacionActividad"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarActividad">
+                    Guardar
+                </button>
+                @*<input type="hidden" id="valorIdProyectoActividad" />*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Finalizar Reponsable del proyecto-->
+<div class="modal bd-example-modal-xl" id="modalFinalizarResponsable" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Finalizar Responsable</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="IdResponsable" id="IdResponsable" value="" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Observaciones:</label>
+                            <input type="text" class="form-control" id="Observaciones" />
+                        </div>
+                    </div>
+                    @*<div class="col-md-6">
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Fecha Fin:</label>
+                                <input type="text" class="form-control" id="FechaFinResponsable" />
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="finalizarResponsable()">
+                    Finalizar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/assets/plugins/moment/moment.js"></script>
+<script src="~/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<!-- Clock Plugin JavaScript -->
+<script src="~/assets/plugins/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<!-- Color Picker Plugin JavaScript -->
+<script src="~/assets/plugins/jquery-asColor/dist/jquery-asColor.js"></script>
+<script src="~/assets/plugins/jquery-asGradient/dist/jquery-asGradient.js"></script>
+<script src="~/assets/plugins/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"></script>
+<!-- Date Picker Plugin JavaScript -->
+<script src="~/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="~/assets/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="~/assets/plugins/daterangepicker/daterangepicker.js"></script>
+
+<script>
+    $('#FechaInicio').bootstrapMaterialDatePicker({ weekStart: 0, time: false });
+    $('#FechaFin').bootstrapMaterialDatePicker({ weekStart: 0, time: false });
+    $('#FechaFinResponsable').bootstrapMaterialDatePicker({ weekStart: 0, time: false });
+</script>
+<!--Termina Modal Agregar Actividad del proyecto-->

@@ -1,0 +1,94 @@
+﻿@model Sipro.Models.Usuario
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPRO - Inicio de Sesion </title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/css/custombox.min.css" rel="stylesheet" />
+    <link href="~/Content/css/login.css" rel="stylesheet" />
+    <script src="~/Content/js/plugins/jquery/jquery-3.3.1.js"></script>
+    <script src="~/Content/js/plugins/bootstrap/bootstrap.js"></script>
+    <link href="~/Content/css/newstyle1.css" rel="stylesheet" />
+    <script>
+        function nobackbutton() {
+            window.location.hash = "no-back-button";
+            window.location.hash = "Again-No-back-button" //chrome
+            window.onhashchange = function () { window.location.hash = "no-back-button"; }
+        }
+    </script>
+    <link href="~/Content/css/login2.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Content/js/modernizr.custom.86080.js"></script>
+</head>
+
+<body onload="nobackbutton();">
+    <div class="precarga">
+    </div>
+    <ul class="cb-slideshow">
+        <li><span></span></li>
+        <li><span></span></li>
+        <li><span></span></li>
+        <li><span></span></li>
+        <li><span></span></li>
+        <li><span></span></li>
+    </ul>
+
+    <div class="contenido">
+        <div class="container">
+            <div id="login-box">
+                <div class="logo">
+                    <h2 class="logo-caption"><span class="tweak">Policía Nacional</span> </h2>
+                    <h5 class="logo-caption"><span class="tweak"></span>Oficiona de Telemática</h5>
+                    <hr />
+                    <h4 class="logo-caption" id="h4login">Sistema de Información para la Gestión de Proyectos de Desarrollo</h4>
+                    <h3 class="logo-caption" id="h1login"><span class="tweak">SIPRO</span></h3>
+                    <div class="mask" style="width:100% !important;">
+                        <hr />
+
+                        @using (Html.BeginForm("Login", "Cuenta"))
+                        {
+                            @Html.AntiForgeryToken()
+                            <img src="~/Content/img/CACIV/Caciv.png" id="imglogin" class="img-responsive img-static img-circle" alt="" style="margin:0% auto; height: 200px; padding: 10px;" />
+                            <div class="form-group">
+                                @Html.TextBoxFor(u => u.usuario, new { @class = "form-control", placeholder = "Usuario", autocomplete = "off" })
+                            </div>
+                            <div class="form-group">
+                                @Html.PasswordFor(u => u.clave, new { @class = "form-control", placeholder = "Contraseña", autocomplete = "off" })
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" id="btnLogin" onclick="esperar();" class="btn btn-default btn-block btn-custom">Ingresar</button>
+                            </div>
+                            <h3 class="logo-caption" align="center" style="font-family: Poiret One; color: red !important; font-weight:bold;" id="MensajeErrors">@ViewBag.Mensaje</h3><br />
+                            <h6><label class="logo-caption" align="justify" style="font-size: 15px;font-family: Poiret One;" id="Mensaje">Está ingresando a un sistema de información de propiedad de la <span class="tweak">Policía Nacional</span>, su uso no autorizado incurre en el incumplimiento de las políticas de seguridad de la Institución establecidas en el Manual del Sistema de Gestión de Seguridad de la Información para la Policía Nacional y acarrea sanciones penales, disciplinarias y/o administrativas a que haya lugar; ayúdenos a prevenir la divulgación no autorizada, pérdida y/o fuga de la información institucional.</label></h6>
+                        }
+
+                    </div>
+
+                </div>
+                <div class="controls">
+                    <div class="view view-tenth">
+                        <div class="inner_content clearfix">
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="particles-js"></div>
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>-->
+    <script src="~/Content/js/login.js"></script>
+
+</body>
+</html>
+
