@@ -17,6 +17,11 @@
 
         public GestionClaims() { }
 
+        /// <summary>
+        /// Método para obtener claim por identificador Asincrono
+        /// </summary>
+        /// <param name="_identificador"></param>
+        /// <returns></returns>
         public async Task<object> ObtenerClaimAsync(string _identificador)
         {
             return await Task<object>.Factory.StartNew(() =>
@@ -27,6 +32,11 @@
             });
         }
 
+        /// <summary>
+        /// Método para obtener claim por identificador
+        /// </summary>
+        /// <param name="_identificador"></param>
+        /// <returns></returns>
         public object ObtenerClaim(string _identificador)
         {
             return (from claim in ClaimsIdentity.Claims
@@ -34,12 +44,21 @@
                     select claim).FirstOrDefault().Value;
         }
 
+        /// <summary>
+        /// Método Obtener Claim por identificador 
+        /// </summary>
+        /// <param name="_identificador"></param>
+        /// <returns></returns>
         public string[] ObtenerClaimRoles(string _identificador) {
             return (from claim in ClaimsIdentity.Claims
                     where claim.Type == _identificador
                     select claim.Value.ToString()).ToArray();
         }
 
+        /// <summary>
+        /// Método para convertir a decimal algunos valores
+        /// </summary>
+        /// <returns></returns>
         public decimal ConvertirAdecimal()
         {
             return Convert.ToDecimal(this);

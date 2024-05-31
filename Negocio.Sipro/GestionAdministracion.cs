@@ -89,51 +89,57 @@ namespace Negocio.Sipro
         }
         #endregion
 
+        #region Métodos
+        /// <summary>
+        /// Método para agregar rol a usuario
+        /// </summary>
+        /// <returns></returns>
         public async Task AgregarRolAsync()
         {
             try
             {
                 using (ContextoSipro db = new ContextoSipro())
                 {
-                      SiproRolDto siproRolDto = new SiproRolDto();
-      
-                    if ( db.SiproRoles.Any(x => x.DescripcionRol == this.lstRoles.DescripcionRol))
+                    SiproRolDto siproRolDto = new SiproRolDto();
+
+                    if (db.SiproRoles.Any(x => x.DescripcionRol == this.lstRoles.DescripcionRol))
                     {
                         this.estadoRespuesta = new EstadoRespuesta
                         {
                             Codigo = 0,
                             Estado = false,
-                             Mensaje = "Señor Funcionario El Rol ya Existe" 
+                            Mensaje = "Señor Funcionario El Rol ya Existe"
                         };
                     }
-                    else {               
-
-                    db.Entry(new SiproRoles
-                    {
-                        IdRol = this.lstRoles.IdRol,
-                        DescripcionRol = this.lstRoles.DescripcionRol.ToUpper(),
-                        Vigente = EstadoRegistro.VIGENTE,
-                        FechaCreacion = DateTime.Now,
-                        UsuarioCreacion = this.lstRoles.UsuarioCreacion.ToUpper(),
-                        MaquinaCreacion = this.LstRoles.MaquinaCreacion,                      
-                    }).State = EntityState.Added;
-
-                    if (await db.SaveChangesAsync() != 0)
-                        this.estadoRespuesta = new EstadoRespuesta
-                        {
-                            Codigo = 1,
-                            Estado = true,
-                            Mensaje = "El Registro es Agregado Correctamente."
-                        };
                     else
-                        this.estadoRespuesta = new EstadoRespuesta
+                    {
+
+                        db.Entry(new SiproRoles
                         {
-                            Codigo = 0,
-                            Estado = false,
-                            Mensaje = "El registro no fue agregado."
-                        };
+                            IdRol = this.lstRoles.IdRol,
+                            DescripcionRol = this.lstRoles.DescripcionRol.ToUpper(),
+                            Vigente = EstadoRegistro.VIGENTE,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = this.lstRoles.UsuarioCreacion.ToUpper(),
+                            MaquinaCreacion = this.LstRoles.MaquinaCreacion,
+                        }).State = EntityState.Added;
+
+                        if (await db.SaveChangesAsync() != 0)
+                            this.estadoRespuesta = new EstadoRespuesta
+                            {
+                                Codigo = 1,
+                                Estado = true,
+                                Mensaje = "El Registro es Agregado Correctamente."
+                            };
+                        else
+                            this.estadoRespuesta = new EstadoRespuesta
+                            {
+                                Codigo = 0,
+                                Estado = false,
+                                Mensaje = "El registro no fue agregado."
+                            };
+                    }
                 }
-            }
             }
             catch (Exception ex)
             {
@@ -146,6 +152,11 @@ namespace Negocio.Sipro
             }
         }
 
+        /// <summary>
+        /// Método para consultar funcionario por identificación
+        /// </summary>
+        /// <param name="_Identificacion"></param>
+        /// <returns></returns>
         public async Task ConsultaFuncionarioAsync(int _Identificacion)
         {
             try
@@ -155,19 +166,19 @@ namespace Negocio.Sipro
                     SiproRolDto siproRolDto = new SiproRolDto();
 
                     this.lstusuarioRol = await (from funcion in db.VmRehuPersonal
-                                          where funcion.Identificacion == _Identificacion
-                                          select new VmRehuPersonalDto
-                                          {
-                                              NombreGrado = funcion.NombreGrado,
-                                              Nombres = funcion.Nombres,
-                                              Apellidos = funcion.Apellidos,
-                                              CargoActual = funcion.CargoActual,
-                                              Fisica = funcion.Fisica,
-                                              Consecutivo =funcion.Consecutivo,
-                                              UndeConsecutivo= funcion.UndeConsecutivo,
-                                              UndeFuerza = funcion.UndeFuerza,
-                                              UsuarioEmpresarial = funcion.UsuarioEmpresarial
-                                          }).FirstOrDefaultAsync();
+                                                where funcion.Identificacion == _Identificacion
+                                                select new VmRehuPersonalDto
+                                                {
+                                                    NombreGrado = funcion.NombreGrado,
+                                                    Nombres = funcion.Nombres,
+                                                    Apellidos = funcion.Apellidos,
+                                                    CargoActual = funcion.CargoActual,
+                                                    Fisica = funcion.Fisica,
+                                                    Consecutivo = funcion.Consecutivo,
+                                                    UndeConsecutivo = funcion.UndeConsecutivo,
+                                                    UndeFuerza = funcion.UndeFuerza,
+                                                    UsuarioEmpresarial = funcion.UsuarioEmpresarial
+                                                }).FirstOrDefaultAsync();
 
 
                     if (this.lstusuarioRol != null)
@@ -186,7 +197,7 @@ namespace Negocio.Sipro
                             Mensaje = "El funcionario no fue encontrado."
                         };
                 }
-              
+
             }
             catch (Exception ex)
             {
@@ -199,6 +210,11 @@ namespace Negocio.Sipro
             }
         }
 
+        /// <summary>
+        /// Método para obtener lista de dominio por id dominio
+        /// </summary>
+        /// <param name="_id"></param>
+        /// <returns></returns>
         public List<SiproCtrlDominioDTO> ControlDominios(int _id)
         {
             List<SiproCtrlDominioDTO> ResultadoProcedimiento = new List<SiproCtrlDominioDTO>();
@@ -214,6 +230,10 @@ namespace Negocio.Sipro
             return ResultadoProcedimiento;
         }
 
+        /// <summary>
+        /// Método para consulta de roles vigentes
+        /// </summary>
+        /// <returns></returns>
         public List<SiproRolDto> ConsultaRol()
         {
             List<SiproRolDto> ResultadoProcedimiento = new List<SiproRolDto>();
@@ -229,6 +249,10 @@ namespace Negocio.Sipro
             return ResultadoProcedimiento;
         }
 
+        /// <summary>
+        /// Método para agregar o guardad usuario
+        /// </summary>
+        /// <returns></returns>
         public async Task AgregarUsuarioAsync()
         {
             var vigentes = 0;
@@ -237,14 +261,14 @@ namespace Negocio.Sipro
                 using (ContextoSipro db = new ContextoSipro())
                 {
                     SiproUsuarioRolDto siproRolDto = new SiproUsuarioRolDto();
-                    
+
                     if (this.lstusuario.Vigente == 6)
                     {
-                         vigentes = 1;
+                        vigentes = 1;
                     }
                     if (this.lstusuario.Vigente == 7)
                     {
-                         vigentes = 0;
+                        vigentes = 0;
                     }
 
 
@@ -315,43 +339,43 @@ namespace Negocio.Sipro
                         }).State = EntityState.Added;
 
                         if (await db.SaveChangesAsync() != 0)
-                        { 
+                        {
                             var id_usuario = (from m in db.SiproUsuarios
                                               where m.UsuarioEmpresarial == this.lstusuario.usuario
                                               && m.Vigente == 1
                                               select m.IdUsuario).FirstOrDefault();
 
-                        db.Entry(new SiproUsuarioRol
-                        {
-                            IdUsuarioRol = Guid.NewGuid().ToString(),
-                            IdUsuario = id_usuario,
-                            IdRol = this.lstusuario.IdRol,
-                            Vigente = vigentes,
-                            FechaCreacion = DateTime.Now,
-                            UsuarioCreacion = this.lstusuario.UsuarioCreacion,
-                            MaquinaCreacion = this.lstusuario.MaquinaCreacion,
-                            FechaInicio = this.lstusuario.FechaInicio,
-                            FechaFin = this.lstusuario.FechaFin,
-                        }).State = EntityState.Added;
+                            db.Entry(new SiproUsuarioRol
+                            {
+                                IdUsuarioRol = Guid.NewGuid().ToString(),
+                                IdUsuario = id_usuario,
+                                IdRol = this.lstusuario.IdRol,
+                                Vigente = vigentes,
+                                FechaCreacion = DateTime.Now,
+                                UsuarioCreacion = this.lstusuario.UsuarioCreacion,
+                                MaquinaCreacion = this.lstusuario.MaquinaCreacion,
+                                FechaInicio = this.lstusuario.FechaInicio,
+                                FechaFin = this.lstusuario.FechaFin,
+                            }).State = EntityState.Added;
 
-                        if (await db.SaveChangesAsync() != 0)
-                            this.estadoRespuesta = new EstadoRespuesta
-                            {
-                                Codigo = 1,
-                                Estado = true,
-                                Mensaje = "El Registro Agregado Correctamente."
-                            };
+                            if (await db.SaveChangesAsync() != 0)
+                                this.estadoRespuesta = new EstadoRespuesta
+                                {
+                                    Codigo = 1,
+                                    Estado = true,
+                                    Mensaje = "El Registro Agregado Correctamente."
+                                };
+                            else
+                                this.estadoRespuesta = new EstadoRespuesta
+                                {
+                                    Codigo = 0,
+                                    Estado = false,
+                                    Mensaje = "El registro no fue agregado."
+                                };
+                        }
                         else
-                            this.estadoRespuesta = new EstadoRespuesta
-                            {
-                                Codigo = 0,
-                                Estado = false,
-                                Mensaje = "El registro no fue agregado."
-                            };
-                    }
-                        else
-                            {
-                   
+                        {
+
                         };
                     }
                 }
@@ -366,6 +390,8 @@ namespace Negocio.Sipro
                 };
             }
         }
+        #endregion
+
 
     }
 }

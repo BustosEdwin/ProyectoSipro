@@ -63,6 +63,10 @@
         #endregion
 
         #region Metodos externos
+        /// <summary>
+        /// Método para agregar comentarios 
+        /// </summary>
+        /// <returns></returns>
         public async Task AgregarComentario()
         {
             try
@@ -115,6 +119,10 @@
             }
         }
 
+        /// <summary>
+        /// Método para realizar comentarios a actividad
+        /// </summary>
+        /// <returns></returns>
         public async Task EnviarActividadComentarioAsync()
         {
             try
@@ -189,6 +197,11 @@
             }
         }
 
+        /// <summary>
+        /// Método para consultar comentarios por id evidencia
+        /// </summary>
+        /// <param name="_idEvidencia"></param>
+        /// <returns></returns>
         public async Task ConsultarComentario(string _idEvidencia)
         {
             try
@@ -239,6 +252,11 @@
 
         }
 
+        /// <summary>
+        /// Método para obtener comentario por id comentario
+        /// </summary>
+        /// <param name="_idComentario"></param>
+        /// <returns></returns>
         public async Task ObtenerComentarioAsync(string _idComentario)
         {
             using (ContextoSipro db = new ContextoSipro())
@@ -267,6 +285,12 @@
                                          }).FirstOrDefaultAsync();
             }
         }
+        
+        /// <summary>
+        /// Método para obtener comnetario y evidencia por id evidencia
+        /// </summary>
+        /// <param name="_idEvidencia"></param>
+        /// <returns></returns>
         public async Task ObtenerComentarioIdEvidenciaAsync(string _idEvidencia)
         {
             using (ContextoSipro db = new ContextoSipro())
@@ -296,7 +320,10 @@
             }
         }
 
-
+        /// <summary>
+        /// Método para aprobar Comentarios
+        /// </summary>
+        /// <returns></returns>
         public async Task AprobarComentarioAsync()
         {
             try

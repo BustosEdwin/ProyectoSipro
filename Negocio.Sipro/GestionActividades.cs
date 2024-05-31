@@ -56,6 +56,11 @@
         #endregion
 
         #region Metodos Externos
+        /// <summary>
+        /// Método para Obtener Actividades Vigente por Id Proyecto
+        /// </summary>
+        /// <param name="_idProyecto"></param>
+        /// <returns></returns>
         public async Task ObtenerActividadesVigentesProyectoAsync(string _idProyecto)
         {
             try
@@ -103,6 +108,10 @@
             }
         }
 
+        /// <summary>
+        /// Método para guardar actividad
+        /// </summary>
+        /// <returns></returns>
         public async Task AgregarActividadAsync()
         {
             try

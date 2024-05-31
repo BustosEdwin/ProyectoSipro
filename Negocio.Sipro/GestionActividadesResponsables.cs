@@ -59,6 +59,12 @@
         #endregion
 
         #region Metodos Externos
+
+        /// <summary>
+        /// Método para obtener actividades vigentes por proyecto teniendo en cuenta el id de la actividad
+        /// </summary>
+        /// <param name="_idActividad"></param>
+        /// <returns></returns>
         public async Task ObtenerActividadesVigentesProyectoAsync(string _idActividad)
         {
             try
@@ -106,6 +112,10 @@
             }
         }
 
+        /// <summary>
+        /// Método para agregar actividad a responsable
+        /// </summary>
+        /// <returns></returns>
         public async Task AgregarActividadResponsableAsync()
         {
             try
@@ -163,7 +173,12 @@
             }
         }
 
-     
+        /// <summary>
+        /// Firmar actividad por el responsable
+        /// </summary>
+        /// <param name="_idResponsable"></param>
+        /// <param name="_idActividad"></param>
+        /// <returns></returns>
         public async Task FimarActividadResponsableAsync(string _idResponsable, string _idActividad)
         {
             try

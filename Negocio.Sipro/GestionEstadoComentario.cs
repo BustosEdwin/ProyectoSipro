@@ -56,6 +56,10 @@
         #endregion
 
         #region Metodos Externos
+        /// <summary>
+        /// Métodos para agregar estados comentarios
+        /// </summary>
+        /// <returns></returns>
         public async Task AgregarEstadoComentario()
         {
             try
@@ -108,6 +112,11 @@
             }
         }
 
+        /// <summary>
+        /// Método para obtener el estado comentario asignados por identificador
+        /// </summary>
+        /// <param name="_identificacion"></param>
+        /// <returns></returns>
         public async Task ObtenerEstadoComentariosAsignadosAsync(decimal _identificacion)
         {
             using (ContextoSipro db = new ContextoSipro())
@@ -157,6 +166,11 @@
             }
         }
 
+        /// <summary>
+        /// Método para obtener estado comentario para corregir por identificación
+        /// </summary>
+        /// <param name="_identificacion"></param>
+        /// <returns></returns>
         public async Task ObtenerEstadoComentariosParaCorregirAsync(decimal _identificacion)
         {
             using (ContextoSipro db = new ContextoSipro())
@@ -203,6 +217,11 @@
             }
         }
 
+        /// <summary>
+        /// Método para consultar comentarios aprobados corregidos por identificación
+        /// </summary>
+        /// <param name="_idComentario"></param>
+        /// <returns></returns>
         public async Task<bool> ConsultarComentarioAprobadoCorregido(string _idComentario)
         {
             using (ContextoSipro db = new ContextoSipro())
@@ -216,6 +235,11 @@
             }
         }
 
+        /// <summary>
+        /// Método para obtener trazabilidad comentarios por id del comentario
+        /// </summary>
+        /// <param name="_idComentario"></param>
+        /// <returns></returns>
         public async Task ObtenerTrazabilidadAsync(string _idComentario)
         {
             using (ContextoSipro db = new ContextoSipro())
